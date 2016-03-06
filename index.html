@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>  
+        <title>flv + vast testcase</title>        
+        <meta charset="utf-8">
+
+        <!-- VideoJs required styles-->
+        <link rel="stylesheet" type="text/css" href="http://mailonline.github.io/videojs-vast-vpaid/demo/videojs_5/video-js.css"/>
+
+        <!-- VideoJs.vast.vpaid required styles-->
+        <link rel="stylesheet" type="text/css" href="http://mailonline.github.io/videojs-vast-vpaid/styles/videojs.vast.vpaid.css"/>
+
+        <script type="text/javascript">
+            // this is mandatory for IE8 !!!!!
+            document.createElement('video');
+            document.createElement('audio');
+            document.createElement('track');
+        </script>
+
+        <!-- VideoJs required scripts-->
+        <script type="text/javascript" src="http://mailonline.github.io/videojs-vast-vpaid/demo/videojs_5/video.js"></script>
+
+        <!-- VideoJs.vast.vpaid required scripts-->
+        <script type="text/javascript" src="http://mailonline.github.io/videojs-vast-vpaid/scripts/es5-shim.js"></script>
+        <script type="text/javascript" src="http://mailonline.github.io/videojs-vast-vpaid/scripts/ie8fix.js"></script>
+        <script type="text/javascript" src="http://mailonline.github.io/videojs-vast-vpaid/scripts/videojs_5.vast.vpaid.js"></script>    
+
+        <style type="text/css">
+            html, body { height: 100%; margin: 0px;  background-color:transparent}               
+        </style>     
+    </head>
+    <body>
+
+        <style type="text/css">       
+            .vjs-default-skin {
+                display: inline-block;
+                width: 100%; 
+                height: 100%;
+                text-align: center;
+                vertical-align: middle;
+                background-color:#333333
+            }
+            video {margin:auto; background-color:transparent; }
+        </style>     
+
+        <div style="width:500px; height: 320px">
+            <video id="vid_1" class="video-js vjs-default-skin"
+                   controls  
+                   preload="auto"    
+                   poster="http://www.video.banzaj.pl/thumb/27734.jpg"
+                   width="100%"
+                   height="100%">
+                <source src="http://www.video.banzaj.pl/flvideo/14547646082143208176.flv" type="video/x-flv">
+                <p>Video Playback Not Supported</p>
+            </video>
+            
+            <video id="vid_2" class="video-js vjs-default-skin"
+                   controls  
+                   autoplay
+                   preload="auto"    
+                   poster="http://www.video.banzaj.pl/thumb/27734.jpg"
+                   width="100%"
+                   height="100%">
+                <source src="http://www.video.banzaj.pl/flvideo/14547646082143208176.flv" type="video/x-flv">
+                <p>Video Playback Not Supported</p>
+            </video>
+        </div>
+
+
+        <script type="text/javascript">
+            // videojs.options.flash.swf = "http://www.video.banzaj.pl/js/video-js/video-js.swf";
+
+            videojs.plugin('ads-setup', function (opts) {
+                var player = this;
+
+
+                var vastAd = player.vastClient({
+                    /*   vpaidFlashLoaderPath: 'http://www.video.banzaj.pl/js/videojs-vast-vpaid/VPAIDFlash.swf',*/
+                    adTagUrl: getAdsUrl,
+                    playAdAlways: opts.playAdAlways || true,
+                    adCancelTimeout: opts.adsCancelTimeout || 5000,
+                    adsEnabled: !!opts.adsEnabled
+                });
+
+
+
+                player.on('vast.reset', function () {
+                    if (!!opts.adsEnabled) {
+                        vastAd.enable();
+                    } else {
+                        vastAd.disable();
+                    }
+
+                });
+
+                function getAdsUrl() {
+                    return 'http://servedby.flashtalking.com/imp/1/31714;812030;208;xml;DailyMail;640x360VASTHTML5/?cachebuster=%%CACHEBUSTER%%';
+                }
+            });
+
+
+
+            videojs('vid_1',
+                    {
+                        'plugins': {
+                            'ads-setup': {
+                                'adsEnabled': true
+                            }
+                        }
+                    });
+            
+            videojs('vid_2',
+                    {
+                        'plugins': {
+                            'ads-setup': {
+                                'adsEnabled': true
+                            }
+                        }
+                    });
+
+        </script>
+
+    </body>
+</html>
